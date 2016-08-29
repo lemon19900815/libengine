@@ -446,27 +446,23 @@ namespace network
   {
     int nread;
 
-    while (true) {
 #ifdef _WIN32
-      nread = recv(fd, buf, len, 0);
+    nread = recv(fd, buf, len, 0);
 #else
-      nread = (int)read(fd, buf, len);                                 /* UPSTREAM_ISSUE: missing (int) cast */
+    nread = (int)read(fd, buf, len);                                 /* UPSTREAM_ISSUE: missing (int) cast */
 #endif
 
-      if (nread > 0) break; // read success
-      if (nread == 0) return -1; // close by peer endpoint
+    if (nread > 0) return nread; // read success
+    if (nread == 0) return -1; // close by peer endpoint
 
-      // nread < 0
-      auto ErrNo = sErrorNo;
+    // nread < 0
+    auto ErrNo = sErrorNo;
 
-      // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
-      // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
-      if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
+    // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
+    // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
+    if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
 
-      return -1;
-    }
-
-    return nread;
+    return -1;
   }
 
   /* Like write(2) but make sure 'count' is read before to return
@@ -492,27 +488,23 @@ namespace network
   {
     int nwrite;
 
-    while (true) {
 #ifdef _WIN32
-      nwrite = send(fd, buf, len, 0);
+    nwrite = send(fd, buf, len, 0);
 #else
-      nwrite = write(fd, buf, len);
+    nwrite = write(fd, buf, len);
 #endif
 
-      if (nwrite > 0) break; // write success
-      if (nwrite == 0) return -1; // close by peer endpoint
+    if (nwrite > 0) return nwrite; // write success
+    if (nwrite == 0) return -1; // close by peer endpoint
 
-      // nread < 0
-      auto ErrNo = sErrorNo;
+    // nread < 0
+    auto ErrNo = sErrorNo;
 
-      // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
-      // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
-      if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
+    // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
+    // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
+    if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
 
-      return -1;
-    }
-
-    return nwrite;
+    return -1;
   }
 
   static int anetListen(char *err, int s, sockaddr *sa, socklen_t len, int backlog)
