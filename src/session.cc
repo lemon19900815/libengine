@@ -42,20 +42,9 @@ int Session::onRead()
     return 0;
 
   len = network::anetRead2(fd_, buf, std::min<unsigned int>(sizeof(buf), availablebuflen));
-  if (len < 0) {
-#ifdef _WIN32
-    if (WSAGetLastError() == WSAEWOULDBLOCK)
-      return 0;
-#else
-    if (errno == EAGAIN)
-      return 0;
-#endif
-    return -1;
-  } else if (len == 0) {
-    return -1; // peer endpoint close
-  } else {
-    recvbuf_->__kfifo_put(buf, len);
-  }
+  if (len < 0) return -1; // read on fd error
+
+  recvbuf_->__kfifo_put(buf, len);
 
   return 0;
 }
@@ -75,22 +64,9 @@ int Session::onWrite()
   sendbuf_->__peek(buf, used);
 
   len = network::anetWrite2(fd_, buf, used);
-  if (len < 0) {
-#ifdef _WIN32
-    if (WSAGetLastError() == WSAEWOULDBLOCK)
-      return 0;
-#else
-    if (errno == EAGAIN)
-      return 0;
-#endif
-    return -1;
-  }
-  else if (len == 0) {
-    return -1; // peer endpoint close
-  }
-  else {
-    sendbuf_->__seekread(len);
-  }
+  if (len < 0) return -1; // write on fd error
+
+  sendbuf_->__seekread(len);
 
   return 0;
 }
