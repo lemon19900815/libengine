@@ -460,6 +460,7 @@ namespace network
 
     // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
     // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
+    // EINTR: if the fd is nonblock, the error wouldn't occur[see: http://willko.iteye.com/blog/1691741]
     if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
 
     return -1;
@@ -502,6 +503,7 @@ namespace network
 
     // EINTR: interrupt by system, we retry system call. [eg. accept,read,write,select,open can recall, but connect can't recall]
     // EAGAIN: no data has been transferred[timeout or nonblock cause this error], try again later
+    // EINTR: if the fd is nonblock, the error wouldn't occur[see: http://willko.iteye.com/blog/1691741]
     if (ErrNo == sEAGAIN || ErrNo == sEINTR) return 0;
 
     return -1;
