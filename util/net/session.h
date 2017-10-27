@@ -55,7 +55,7 @@ public:
   */
   inline std::string description() const {
     char desc[128];
-    snprintf(desc, sizeof(desc), "%s:%d", ip_, port_);
+    snprintf(desc, sizeof(desc), "%s:%d", ip_.c_str(), port_);
     return std::string(desc);
   }
 
