@@ -1,18 +1,29 @@
 #include "gameserver.h"
 
-#include "util.h"
-#include "netcore.h"
+#include "timehelp.h"
+#include "mainloop.h"
+#include "net/netcore.h"
+#include "net/session_manager.h"
+
+util::Time gtime;
+util::MainLoop gloop;
+
+// 服务器监听端口
+constexpr int32_t kServerPort = 6666;
+// 监听的最大连接数
+constexpr int32_t kMaxEventNum = 10000;
+// 每帧时间定义
+constexpr uint32_t kPerFrameTime = 20;
 
 RunApplication(GameServer);
 
 GameServer::GameServer()
 {
-  netcore_ = std::make_shared<NetCore>();
+  stoped_ = true;
 }
 
 GameServer::~GameServer()
 {
-
 }
 
 bool GameServer::startup(int argc, char* argv[])
@@ -20,50 +31,52 @@ bool GameServer::startup(int argc, char* argv[])
   NOTUSED(argc);
   NOTUSED(argv);
 
-#define SERVER_PORT 6666
-#define MAX_EVENTS 10000
+  stoped_ = false;
 
-  if (netcore_->initialize(MAX_EVENTS)) {
-    return netcore_->startup(SERVER_PORT);
+  // 注册主循环调度方式和间隔
+  gloop.registerSchema(
+    kPerFrameTime, std::bind(&GameServer::schema, this));
+
+  auto accept_proc = std::bind(&SessionManager::onAcceptSession, gSessionManagerPtr, std::placeholders::_1);
+  auto close_proc = std::bind(&SessionManager::onCloseSession, gSessionManagerPtr, std::placeholders::_1);
+
+  netcore_ = std::make_shared<NetCore>();
+  if (!netcore_->initialize(kMaxEventNum, accept_proc, close_proc))
+  {
+    std::cerr << "initialize netcore failed." << std::endl;
+    return false;
   }
 
-  return false;
+  return netcore_->startup(kServerPort);
 }
 
 void GameServer::run()
 {
-  uint64_t current;
-  uint64_t last = Time::ms();
-
-// server main loop frame times per second defeine
-#define SERVER_FRAME 20
-
-// server per main loop cost milli second define
-#define FRAME_TIME 50
-
-  int32_t frame = 0;
-
-  while (1)
+  while (!stoped_)
   {
-    current = Time::ms();
-    uint64_t elapsed = current - last;
-    if (elapsed >= FRAME_TIME)
-    {
-      // do main logic
-      if (frame % 100 == 0) {
-        printf("in main loop\n");
-      }
+    gtime.update();
 
-      ++frame;
-      last = current;
-    }
+    // 主循环
+    gloop.update();
 
     // sleep for 10 ms
     ThreadHelper::sleep(10);
   }
+
+  std::cout << "GameServer is closing..." << std::endl;
+}
+
+void GameServer::schema()
+{
+  bool active = false;
+  if (gloop.frame_count() % 5 == 0)
+    active = true;
+
+  gSessionManagerPtr->update(active);
 }
 
 void GameServer::stop()
 {
+  stoped_ = true;
   netcore_->stop();
 }

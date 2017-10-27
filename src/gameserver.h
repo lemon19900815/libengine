@@ -1,12 +1,13 @@
 #ifndef __GAME_SERVER_INC_H__
 #define __GAME_SERVER_INC_H__
 
-#include "serverapplication.h"
+#include "serverapp.h"
+
 #include <memory>
 
 class NetCore;
 
-class GameServer : public ServerApplication
+class GameServer : public ServerApp
 {
 public:
   GameServer();
@@ -17,6 +18,10 @@ public:
   void stop() override;
 
 private:
+  void schema();
+
+private:
+  bool stoped_;
   std::shared_ptr<NetCore> netcore_;
 };
 
