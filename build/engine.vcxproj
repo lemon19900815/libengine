@@ -19,34 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ae.cc" />
-    <ClCompile Include="..\src\ae_epoll.cc" />
-    <ClCompile Include="..\src\ae_select.cc" />
     <ClCompile Include="..\src\gameserver.cc" />
-    <ClCompile Include="..\src\logger.cc" />
-    <ClCompile Include="..\src\netcore.cc" />
-    <ClCompile Include="..\src\networking.cc" />
-    <ClCompile Include="..\src\ringbuffer.cc" />
-    <ClCompile Include="..\src\serverapplication.cc" />
-    <ClCompile Include="..\src\session.cc" />
-    <ClCompile Include="..\src\util.cc" />
+    <ClCompile Include="..\util\log\logger.cc" />
+    <ClCompile Include="..\util\net\ae.cc" />
+    <ClCompile Include="..\util\net\ae_epoll.cc" />
+    <ClCompile Include="..\util\net\ae_select.cc" />
+    <ClCompile Include="..\util\net\netcore.cc" />
+    <ClCompile Include="..\util\net\networking.cc" />
+    <ClCompile Include="..\util\net\session.cc" />
+    <ClCompile Include="..\util\net\session_manager.cc" />
+    <ClCompile Include="..\util\ringbuffer\ringbuffer.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ae.h" />
-    <ClInclude Include="..\src\aebase.h" />
-    <ClInclude Include="..\src\ae_epoll.h" />
-    <ClInclude Include="..\src\ae_select.h" />
     <ClInclude Include="..\src\gameserver.h" />
-    <ClInclude Include="..\src\logger.h" />
-    <ClInclude Include="..\src\netcore.h" />
-    <ClInclude Include="..\src\networking.h" />
-    <ClInclude Include="..\src\ringbuffer.h" />
-    <ClInclude Include="..\src\runable.h" />
-    <ClInclude Include="..\src\serverapplication.h" />
-    <ClInclude Include="..\src\session.h" />
-    <ClInclude Include="..\src\singleton.h" />
-    <ClInclude Include="..\src\threadhelper.h" />
-    <ClInclude Include="..\src\util.h" />
+    <ClInclude Include="..\util\log\logger.h" />
+    <ClInclude Include="..\util\net\ae.h" />
+    <ClInclude Include="..\util\net\aebase.h" />
+    <ClInclude Include="..\util\net\ae_epoll.h" />
+    <ClInclude Include="..\util\net\ae_select.h" />
+    <ClInclude Include="..\util\net\netcore.h" />
+    <ClInclude Include="..\util\net\networking.h" />
+    <ClInclude Include="..\util\net\session.h" />
+    <ClInclude Include="..\util\net\session_manager.h" />
+    <ClInclude Include="..\util\ringbuffer\ringbuffer.h" />
+    <ClInclude Include="..\util\thread\runable.h" />
+    <ClInclude Include="..\util\thread\threadhelper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8DB9C143-D13B-4F3B-A363-3B77400F8E81}</ProjectGuid>
@@ -131,6 +128,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>../src;../util</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
