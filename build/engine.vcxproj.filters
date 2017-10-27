@@ -19,6 +19,9 @@
     <Filter Include="server">
       <UniqueIdentifier>{54c7ab0b-f63c-44f6-af7e-e57ae441916f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cmake">
+      <UniqueIdentifier>{ff751aed-bf08-4112-bdeb-70a58750ff58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\gameserver.cc">
@@ -92,5 +95,10 @@
     <ClInclude Include="..\util\net\session_manager.h">
       <Filter>util\net</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\CMakeLists.txt">
+      <Filter>cmake</Filter>
+    </Text>
   </ItemGroup>
 </Project>

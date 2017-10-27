@@ -45,6 +45,9 @@
     <ClInclude Include="..\util\thread\runable.h" />
     <ClInclude Include="..\util\thread\threadhelper.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\CMakeLists.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8DB9C143-D13B-4F3B-A363-3B77400F8E81}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

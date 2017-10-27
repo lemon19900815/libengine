@@ -1,0 +1,7 @@
+# C/C++ build outputs
+build/.vs
+build/CMakeFiles
+build/Debug
+build/x64
+build/*.db
+build/*.txt
