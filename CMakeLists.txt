@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(
                     ${PROJECT_SOURCE_DIR}/
                     ${PROJECT_SOURCE_DIR}/src
                     ${PROJECT_SOURCE_DIR}/util
+                    ${PROJECT_SOURCE_DIR}/3rd/rapidjson/include
                     )
 
 ADD_DEFINITIONS(-D__LINUX__)
