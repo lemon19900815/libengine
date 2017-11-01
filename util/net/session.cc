@@ -73,5 +73,16 @@ int Session::onWrite()
 // ½âÎö·â°ü
 void Session::dispatch()
 {
+  char buff[8192];
+  auto len = recvbuf_->used();
 
+  if (len > sizeof(buff))
+    len = sizeof(buff);
+
+  len = recvbuf_->__kfifo_get(buff, len);
+  recvbuf_->__seekread(len);
+
+  buff[len - 1] = '\0';
+
+  std::cout << buff << std::endl;
 }

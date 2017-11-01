@@ -4,16 +4,16 @@
 #include "mainloop.h"
 #include "net/netcore.h"
 #include "net/session_manager.h"
+#include "json/RapidJsonHelper.h"
 
 util::Time gtime;
 util::MainLoop gloop;
 
-// 服务器监听端口
-constexpr int32_t kServerPort = 6666;
-// 监听的最大连接数
-constexpr int32_t kMaxEventNum = 10000;
 // 每帧时间定义
 constexpr uint32_t kPerFrameTime = 20;
+
+// 配置信息
+util::JsonObj gconf;
 
 RunApplication(GameServer);
 
@@ -31,6 +31,20 @@ bool GameServer::startup(int argc, char* argv[])
   NOTUSED(argc);
   NOTUSED(argv);
 
+  if (!gconf.ParseFile("../conf.json"))
+  {
+    std::cerr << "open conf file failed.";
+    return false;
+  }
+
+  auto server_port = 0;
+  if (!gconf.Get("ServerPort", server_port))
+    return false;
+
+  auto max_event_num = 0;
+  if (!gconf.Get("MaxEventNum", max_event_num))
+    return false;
+
   stoped_ = false;
 
   // 注册主循环调度方式和间隔
@@ -41,13 +55,13 @@ bool GameServer::startup(int argc, char* argv[])
   auto close_proc = std::bind(&SessionManager::onCloseSession, gSessionManagerPtr, std::placeholders::_1);
 
   netcore_ = std::make_shared<NetCore>();
-  if (!netcore_->initialize(kMaxEventNum, accept_proc, close_proc))
+  if (!netcore_->initialize(max_event_num, accept_proc, close_proc))
   {
     std::cerr << "initialize netcore failed." << std::endl;
     return false;
   }
 
-  return netcore_->startup(kServerPort);
+  return netcore_->startup(server_port);
 }
 
 void GameServer::run()

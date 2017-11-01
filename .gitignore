@@ -5,3 +5,6 @@ build/Debug
 build/x64
 build/*.db
 build/*.txt
+build/*.db
+build/*.opendb
+3rd/*
