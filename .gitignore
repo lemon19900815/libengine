@@ -7,4 +7,4 @@ build/*.db
 build/*.txt
 build/*.db
 build/*.opendb
-3rd/*
+3rd/rapidjson/*
